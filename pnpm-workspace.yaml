@@ -1,0 +1,6 @@
+packages:
+  - database
+  - web
+
+onlyBuiltDependencies:
+  - supabase
