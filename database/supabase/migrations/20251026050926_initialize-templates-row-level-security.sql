@@ -1,4 +1,4 @@
-create procedure templates.enable_row_level_security (target_table regclass) as $$
+create procedure templates.enable_row_level_security_with_user_id (target_table regclass) as $$
   declare
     schema_name text := (parse_ident(target_table::text))[1];
     table_name text := (parse_ident(target_table::text))[2];
@@ -29,12 +29,16 @@ $$ language plpgsql
 set
   search_path = '';
 
-comment on procedure templates.enable_row_level_security (regclass) is 'Alters the given target table to enable row level security (RLS) and attaches the necessary "user_id" column.';
+comment on procedure templates.enable_row_level_security_with_user_id (regclass) is 'Alters the given target table to enable row level security (RLS) and attaches the necessary "user_id" column.';
 
 create procedure templates.create_policy (target_table regclass, policy_type text) as $$
   begin
     case policy_type
       when 'self_create' then
+        execute format(
+          'grant insert on %s to authenticated;',
+          target_table
+        );
         execute format(
           'create policy "An authenticated user can create their own records" on %s '
           'for insert '
@@ -44,6 +48,10 @@ create procedure templates.create_policy (target_table regclass, policy_type tex
         );
       when 'self_read' then
         execute format(
+          'grant select on %s to authenticated;',
+          target_table
+        );
+        execute format(
           'create policy "An authenticated user can read their own records" on %s '
           'for select '
           'to authenticated '
@@ -51,6 +59,10 @@ create procedure templates.create_policy (target_table regclass, policy_type tex
           target_table
         );
       when 'self_update' then
+        execute format(
+          'grant update on %s to authenticated;',
+          target_table
+        );
         execute format(
           'create policy "An authenticated user can update their own records" on %s '
           'for update '
@@ -60,6 +72,10 @@ create procedure templates.create_policy (target_table regclass, policy_type tex
         );
       when 'self_delete' then
         execute format(
+          'grant delete on %s to authenticated;',
+          target_table
+        );
+        execute format(
           'create policy "An authenticated user can delete their own records" on %s '
           'for delete '
           'to authenticated '
@@ -68,6 +84,10 @@ create procedure templates.create_policy (target_table regclass, policy_type tex
         );
       when 'authenticated_read' then
         execute format(
+          'grant select on %s to authenticated;',
+          target_table
+        );
+        execute format(
           'create policy "An authenticated user can read all records" on %s '
           'for select '
           'to authenticated '
@@ -75,6 +95,10 @@ create procedure templates.create_policy (target_table regclass, policy_type tex
           target_table
         );
       when 'public_read' then
+        execute format(
+          'grant select on %s to anon, authenticated;',
+          target_table
+        );
         execute format(
           'create policy "Any user can read all records" on %s '
           'for select '
