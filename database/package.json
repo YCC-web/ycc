@@ -12,7 +12,10 @@
     "migration:up": "supabase migration up",
     "migration:new": "supabase migration new",
     "lint": "supabase db lint",
-    "test": "echo OK"
+    "test": "echo OK",
+    "deploy": "pnpm deploy:config && pnpm deploy:db",
+    "deploy:config": "supabase config push",
+    "deploy:db": "supabase db push"
   },
   "devDependencies": {
     "supabase": "^2.54.11"
