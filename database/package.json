@@ -13,7 +13,7 @@
     "migration:new": "supabase migration new",
     "lint": "supabase db lint",
     "test": "echo OK",
-    "remote:deploy": "pnpm deploy:config && pnpm deploy:db",
+    "remote:deploy": "pnpm remote:deploy:config && pnpm remote:deploy:db",
     "remote:deploy:config": "supabase config push",
     "remote:deploy:db": "supabase db push"
   },
