@@ -42,7 +42,7 @@ jobs:
           SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
           SUPABASE_ACCESS_TOKEN: ${{ github.event.inputs.supabase_access_token }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DATABASE_PASSWORD }}
-          run: |
-            supabase link --project-ref $SUPABASE_PROJECT_ID
-            supabase config push
-            supabase db push
+        run: |
+          supabase link --project-ref $SUPABASE_PROJECT_ID
+          supabase config push
+          supabase db push
