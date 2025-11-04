@@ -1,5 +1,12 @@
+/**
+ * Templates schema for shared common columns and utility functions, procedures, etc.
+ */
 create schema templates;
 
+/**
+ * Tables in the templates schema aren't intended to be written to and can cause issues if data exists in them.
+ * The goal would be to utilize "like templates.<template_table> including all" to properly enforce standards.
+ */
 create function templates.enforce_read_only_templates () returns event_trigger as $$
   declare
     event_record record;
@@ -15,9 +22,8 @@ $$ language plpgsql
 set
   search_path = '';
 
-comment on function templates.enforce_read_only_templates () is 'Tables within the "templates" schema should be read-only to be used with SQL LIKE clauses.';
-
+/**
+ * Triggers enforce_read_only_templates () when tables are created.
+ */
 create event trigger enforce_read_only_templates on ddl_command_end when tag in ('create table', 'create table as')
 execute function templates.enforce_read_only_templates ();
-
-comment on event trigger enforce_read_only_templates is 'Triggers the enforce_read_only_templates function when tables are created.';

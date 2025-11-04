@@ -1,12 +1,22 @@
+/**
+ * The default metadata columns for tracking timestamps for auditing.
+ *
+ * Example:
+ * create table <schema>.<table> ( like templates.id_primary_key including all );
+ */
 create table
   templates.audit_timestamps (
+    -- timestamp of when the row was created, never updated
     created_at timestamp with time zone not null default now(),
+    -- timestamp of the latest time this row was updated
     updated_at timestamp with time zone,
+    -- timestamp of when the row was "deleted", this column is used as a "soft-delete"
     deleted_at timestamp with time zone
   );
 
-comment on table templates.audit_timestamps is 'Default timestamp columns for tracking audit history of a row.';
-
+/**
+ * Function to enforce proper timestamp values for all timestamp related metadata fields.
+ */
 create function templates.enforce_audit_timestamps () returns trigger as $$
   begin
     if tg_op = 'insert' then
@@ -34,8 +44,13 @@ $$ language plpgsql
 set
   search_path = '';
 
-comment on function templates.enforce_audit_timestamps () is 'Ensures data consistency on the audit timestamp columns (created_at, updated_at, deleted_at) by ensuring the values are always the appropriate timestamp.';
-
+/**
+ * Applies a trigger that executes enforce_audit_timestamps () during inserts and updates of a row.
+ * This procedure should be called if utilizing "templates.audit_timestamps".
+ *
+ * Example:
+ * call templates.audit_timestamps('<schema>.<table>');
+ */
 create procedure templates.apply_audit_timestamps_trigger (target_table regclass) as $$
   declare
     trigger_name text := replace(target_table::text, '.', '__') || '__enforce_audit_timestamps';
@@ -53,5 +68,3 @@ create procedure templates.apply_audit_timestamps_trigger (target_table regclass
 $$ language plpgsql
 set
   search_path = '';
-
-comment on procedure templates.apply_audit_timestamps_trigger (regclass) is 'Applies the enforce_audit_timestamps function during inserts and updates of a row.';

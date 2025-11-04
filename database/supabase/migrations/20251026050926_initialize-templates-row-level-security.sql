@@ -1,3 +1,11 @@
+/*
+ * Enables row level security (RLS) and attaches a "user_id" column with a foreign-key (FK) constaint to the Supabase authentication table.
+ * RLS is critical when writing tables designed to be utilized in "public-facing" workflows to ensure that a user only has access to data
+ * they are intended to have access to.
+ *
+ * Example:
+ * call templates.enable_row_level_security_with_user_id('<schema>.<table>');
+ */
 create procedure templates.enable_row_level_security_with_user_id (target_table regclass) as $$
   declare
     schema_name text := (parse_ident(target_table::text))[1];
@@ -13,15 +21,11 @@ create procedure templates.enable_row_level_security_with_user_id (target_table 
     );
     raise log 'user_id column added for table="%s"', target_table;
 
+    -- an index is created for user_id to help improve the performance of RLS queries
     execute format(
       'create index %I on %s using btree (user_id)',
       index_name,
       target_table
-    );
-    execute format(
-      'comment on index %I.%I is ''The "user_id" column is indexed to improve RLS performance.'';',
-      schema_name,
-      index_name
     );
     raise log 'created index="%s" for "user_id" on table="%s"', index_name, target_table;
   end;
@@ -29,8 +33,18 @@ $$ language plpgsql
 set
   search_path = '';
 
-comment on procedure templates.enable_row_level_security_with_user_id (regclass) is 'Alters the given target table to enable row level security (RLS) and attaches the necessary "user_id" column.';
-
+/**
+ * When RLS is enabled, policies must be attached to the table for them to be useful.
+ * Supabase has two default roles: anon, and authenticated
+ * The "anon" role represents a user who is unauthenticated and is not logged-in. This is essentially any public user.
+ * The "authenticated" role represents a user who created an account and is logged-in.
+ *
+ * Policies can be combined together to create more complex restrictions. For example, image a "reviews" table where
+ * only logged-in users may create reviews, but any user may read them:
+ *
+ * call templates.create_policy('api.reviews', 'self_create'); -- users can create their own reviews and those reviews are attributed to them
+ * call templates.create_policy('api.reviews', 'public_read'); -- any user may read any other user's reviews, regardless of attribution
+ */
 create procedure templates.create_policy (target_table regclass, policy_type text) as $$
   begin
     case policy_type
@@ -115,5 +129,3 @@ create procedure templates.create_policy (target_table regclass, policy_type tex
 $$ language plpgsql
 set
   search_path = '';
-
-comment on procedure templates.create_policy (regclass, text) is 'Applies a specified policy type to the given target table to be used in conjunction with RLS.';
