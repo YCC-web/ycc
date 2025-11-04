@@ -1,0 +1,9 @@
+{
+  "plugins": ["prettier-plugin-sql"],
+  "useTabs": true,
+  "language": "postgresql",
+  "keywordCase": "lower",
+  "dataTypeCase": "lower",
+  "functionCase": "lower",
+  "identifierCase": "lower"
+}
