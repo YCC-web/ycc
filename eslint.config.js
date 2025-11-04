@@ -12,12 +12,28 @@ export default defineConfig([
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
+    ],
+    languageOptions: {
+      ecmaVersion: 2020,
+    },
+  },
+  {
+    files: ['web/**/*.{ts,tsx}'],
+    extends: [
       reactHooks.configs['recommended-latest'],
       reactRefresh.configs.vite,
     ],
     languageOptions: {
-      ecmaVersion: 2020,
       globals: globals.browser,
     },
-  },
+  }
+  ,
+  {
+    files: ['database/**/*.{ts,tsx}'],
+    extends: [
+    ],
+    languageOptions: {
+      globals: globals.node,
+    },
+  }
 ])

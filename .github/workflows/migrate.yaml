@@ -1,0 +1,48 @@
+name: Supabase Database Migration
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'GitHub environment for database migration'
+        required: true
+        type: choice
+        options:
+          - production
+      supabase_access_token:
+        description: 'Short-Lived (1H) Supabase Personal Access Token (PAT)'
+        requied: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: database-migration
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v4
+
+      - name: Mask Supabase Personal Access Token
+        shell: bash
+        run: echo "::add-mask::${{ github.event.inputs.supabase_access_token }}"
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Link Project and Migrate
+        env:
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          SUPABASE_ACCESS_TOKEN: ${{ github.event.inputs.supabase_access_token }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DATABASE_PASSWORD }}
+          run: |
+            supabase link --project-ref $SUPABASE_PROJECT_ID
+            supabase config push
+            supabase db push
