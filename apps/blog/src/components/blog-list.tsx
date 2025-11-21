@@ -27,7 +27,7 @@ const POSTS_PER_PAGE = 10;
 
 export default function BlogList() {
 	const [searchParams, setSearchParams] = useSearchParams();
-	const currentPage = parseInt(searchParams.get('page') || '1', 10);
+	const currentPage = parseInt(searchParams.get("page") || "1", 10);
 	const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
 
 	// Redirect invalid pages
