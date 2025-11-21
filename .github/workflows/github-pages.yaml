@@ -56,9 +56,8 @@ jobs:
 
       - name: upload built artifact
         uses: actions/upload-pages-artifact@v4
-        working-directory: ./apps/web
         with:
-          path: "./dist"
+          path: "./apps/web/dist"
 
       - name: deploy to github pages
         id: deployment
