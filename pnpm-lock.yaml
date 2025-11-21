@@ -155,7 +155,7 @@ importers:
         specifier: ^2.54.11
         version: 2.54.11
 
-  apps/web:
+  apps/shell:
     dependencies:
       '@ycc/admin':
         specifier: workspace:*
