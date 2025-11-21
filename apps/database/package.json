@@ -1,0 +1,20 @@
+{
+  "name": "@ycc/database",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "supabase start",
+    "clean": "supabase stop --no-backup",
+    "dev": "supabase start",
+    "lint": "supabase db lint --level error",
+    "test": "echo OK",
+    "new:migration": "supabase migration new",
+    "remote:deploy": "pnpm remote:deploy:config && pnpm remote:deploy:db",
+    "remote:deploy:config": "supabase config push",
+    "remote:deploy:db": "supabase db push"
+  },
+  "devDependencies": {
+    "supabase": "^2.54.11"
+  }
+}

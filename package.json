@@ -1,28 +1,22 @@
 {
-  "name": "ycc",
-  "version": "1.0.0",
-  "license": "AGPL-3.0-or-later",
-  "packageManager": "pnpm@10.18.2",
-  "type": "module",
-  "scripts": {
-    "dev:up": "pnpm --parallel --filter './**' dev:up",
-    "dev:down": "pnpm --parallel --filter './**' dev:down",
-    "clean": "pnpm --parallel --filter './**' clean",
-    "build": "tsc -b && pnpm --parallel --filter './**' build",
-    "lint": "pnpm --filter './**' lint",
-    "test": "pnpm --parallel --filter './**' test"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.36.0",
-    "@types/node": "^24.6.0",
-    "@types/react": "^19.1.16",
-    "@types/react-dom": "^19.1.9",
-    "eslint": "^9.36.0",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.22",
-    "globals": "^16.4.0",
-    "rimraf": "^6.0.1",
-    "typescript": "~5.9.3",
-    "typescript-eslint": "^8.45.0"
-  }
+	"name": "ycc",
+	"version": "1.0.0",
+	"license": "AGPL-3.0-or-later",
+	"packageManager": "pnpm@10.18.2",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "turbo run build",
+		"clean": "turbo run clean",
+		"dev": "turbo run dev",
+		"format": "prettier --write \"**/*.{ts,tsx,sql,md,yaml}\"",
+		"lint": "turbo run lint",
+		"test": "turbo run test",
+		"check-types": "turbo run check-types"
+	},
+	"devDependencies": {
+		"prettier": "^3.6.2",
+		"prettier-plugin-sql": "^0.19.2",
+		"turbo": "^2.6.0"
+	}
 }

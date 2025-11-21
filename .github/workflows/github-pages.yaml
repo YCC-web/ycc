@@ -1,0 +1,64 @@
+name: GitHub Pages Deploy
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  test:
+    uses: ./.github/workflows/test.yaml
+    permissions:
+      contents: read
+
+  deploy:
+    name: Deploy
+    needs:
+      - test
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v4
+
+      - name: install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: "10.18.2"
+
+      - name: setup node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/jod
+          cache: "pnpm"
+
+      - name: install dependencies
+        run: pnpm install
+
+      - name: build web
+        working-directory: ./apps/web
+        run: pnpm build
+
+      - name: setup github pages
+        uses: actions/configure-pages@v5
+
+      - name: upload built artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: "./apps/web/dist"
+
+      - name: deploy to github pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -181,3 +181,9 @@ Icon[]
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Turborepo
+.turbo
+
+# React Router
+.react-router

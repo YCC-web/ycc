@@ -1,6 +1,7 @@
 packages:
-  - database
-  - web
+  - "apps/*"
+  - "configs/*"
+  - "packages/*"
 
 onlyBuiltDependencies:
   - supabase
