@@ -1,7 +1,7 @@
 packages:
   - "apps/*"
   - "configs/*"
-  - "web/*"
+  - "packages/*"
 
 onlyBuiltDependencies:
   - supabase

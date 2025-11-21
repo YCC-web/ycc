@@ -1,12 +1,12 @@
+import { Button } from '@ycc/ui';
 import { createRoot } from 'react-dom/client';
-import { createHashRouter, RouterProvider } from 'react-router'; // v7 import!
+import { createHashRouter, Link, RouterProvider } from 'react-router';
+import '@ycc/ui/index.css';
 
 const router = createHashRouter([
   { path: '/', element: <HomePage /> },
-  { path: '/app', element: <Client /> },
+  { path: '/client', element: <Client /> },
 ]);
-
-
 
 createRoot(document.getElementById('root')!).render(
   <RouterProvider router={router} />
@@ -14,12 +14,19 @@ createRoot(document.getElementById('root')!).render(
 
 function HomePage() {
   return (
-    <div className="flex flex-col items-center p-7 rounded-2xl">HELLO WORLD</div>
+    <div className="flex flex-col items-center p-7 rounded-2xl">
+      <h1>This is the homepage</h1>
+      <Link to="/client"><Button>Go to client</Button></Link>
+    </div>
+    
   )
 }
 
 function Client() {
   return (
-    <div>CLIENT</div>
+    <div className="flex flex-col items-center p-7 rounded-2xl">
+      <h1>This is the client page</h1>
+      <Link to="/"><Button>Go to homepage</Button></Link>
+    </div>
   )
 }
