@@ -1,5 +1,5 @@
 {
-	"name": "@ycc/web",
+	"name": "@ycc/shell",
 	"private": true,
 	"version": "1.0.0",
 	"type": "module",

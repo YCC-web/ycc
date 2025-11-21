@@ -47,8 +47,8 @@ jobs:
       - name: install dependencies
         run: pnpm install
 
-      - name: build web
-        run: pnpm build --filter=@ycc/web...
+      - name: build shell
+        run: pnpm build --filter=@ycc/shell...
 
       - name: setup github pages
         uses: actions/configure-pages@v5
@@ -56,7 +56,7 @@ jobs:
       - name: upload built artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: "./apps/web/dist"
+          path: "./apps/shell/dist"
 
       - name: deploy to github pages
         id: deployment
