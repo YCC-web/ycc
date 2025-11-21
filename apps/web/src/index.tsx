@@ -1,15 +1,21 @@
+import "@ycc/ui/index.css";
+import "@ycc/blog/index.css";
 import { Button } from "@ycc/ui";
 import { createRoot } from "react-dom/client";
 import { createHashRouter, Link, RouterProvider } from "react-router";
-import "@ycc/ui/index.css";
+import { blogRoutes } from "@ycc/blog";
+import { StrictMode } from "react";
 
 const router = createHashRouter([
 	{ path: "/", element: <HomePage /> },
 	{ path: "/client", element: <Client /> },
+	...blogRoutes,
 ]);
 
 createRoot(document.getElementById("root")!).render(
-	<RouterProvider router={router} />,
+	<StrictMode>
+		<RouterProvider router={router} />,
+	</StrictMode>,
 );
 
 function HomePage() {

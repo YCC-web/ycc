@@ -10,5 +10,14 @@ export default defineConfig({
 			},
 		}),
 	],
+	build: {
+		sourcemap: true,
+	},
+	esbuild: {
+		keepNames: true,
+	},
+	server: {
+		port: 5173,
+	},
 	base: "/ycc/",
 });
