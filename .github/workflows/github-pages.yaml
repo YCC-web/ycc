@@ -48,8 +48,7 @@ jobs:
         run: pnpm install
 
       - name: build web
-        working-directory: ./apps/web
-        run: pnpm build
+        run: pnpm build --filter=@ycc/web...
 
       - name: setup github pages
         uses: actions/configure-pages@v5
