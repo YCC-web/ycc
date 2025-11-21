@@ -11,14 +11,14 @@ export const blogRoutes: RouteObject[] = [
 		children: [
 			{
 				index: true,
-				element: <Navigate to="/blog/page/1" replace />,
+				element: <Navigate to="/blog/posts?page=1" replace />,
 			},
 			{
-				path: "page/:page",
+				path: "posts",
 				element: <BlogList />,
 			},
 			{
-				path: ":slug",
+				path: "posts/:slug",
 				element: <BlogPost />,
 			},
 		],

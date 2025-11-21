@@ -1,4 +1,4 @@
-import { Link, useParams, Navigate } from "react-router";
+import { Link, useSearchParams, Navigate } from "react-router";
 
 // GPT Sample
 
@@ -26,17 +26,21 @@ const posts = Object.entries(postModules)
 const POSTS_PER_PAGE = 10;
 
 export default function BlogList() {
-	const { page = "1" } = useParams();
-	const currentPage = parseInt(page, 10);
+	const [searchParams, setSearchParams] = useSearchParams();
+	const currentPage = parseInt(searchParams.get('page') || '1', 10);
 	const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
 
 	// Redirect invalid pages
 	if (currentPage < 1 || currentPage > totalPages) {
-		return <Navigate to="/blog/page/1" replace />;
+		return <Navigate to="/blog/posts?page=1" replace />;
 	}
 
 	const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
 	const currentPosts = posts.slice(startIndex, startIndex + POSTS_PER_PAGE);
+
+	const goToPage = (page: number) => {
+		setSearchParams({ page: page.toString() });
+	};
 
 	return (
 		<div className="space-y-8">
@@ -45,7 +49,7 @@ export default function BlogList() {
 			<div className="space-y-8">
 				{currentPosts.map((post) => (
 					<article key={post.slug} className="border-b pb-8 last:border-0">
-						<Link to={`/blog/${post.slug}`} className="group">
+						<Link to={`/blog/posts/${post.slug}`} className="group">
 							<h2 className="text-2xl font-bold group-hover:text-blue-600 transition-colors mb-2">
 								{post.title}
 							</h2>
@@ -85,12 +89,12 @@ export default function BlogList() {
 			{totalPages > 1 && (
 				<nav className="flex justify-center items-center gap-4 pt-8">
 					{currentPage > 1 ? (
-						<Link
-							to={`/blog/page/${currentPage - 1}`}
+						<button
+							onClick={() => goToPage(currentPage - 1)}
 							className="px-4 py-2 border rounded-lg hover:bg-gray-50 transition-colors"
 						>
 							← Previous
-						</Link>
+						</button>
 					) : (
 						<span className="px-4 py-2 text-gray-400">← Previous</span>
 					)}
@@ -100,12 +104,12 @@ export default function BlogList() {
 					</span>
 
 					{currentPage < totalPages ? (
-						<Link
-							to={`/blog/page/${currentPage + 1}`}
+						<button
+							onClick={() => goToPage(currentPage + 1)}
 							className="px-4 py-2 border rounded-lg hover:bg-gray-50 transition-colors"
 						>
 							Next →
-						</Link>
+						</button>
 					) : (
 						<span className="px-4 py-2 text-gray-400">Next →</span>
 					)}
