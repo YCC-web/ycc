@@ -4,11 +4,13 @@ import { Button } from "@ycc/ui";
 import { createRoot } from "react-dom/client";
 import { createHashRouter, Link, RouterProvider } from "react-router";
 import { blogRoutes } from "@ycc/blog";
+import { adminRoutes } from "@ycc/admin";
 import { StrictMode } from "react";
 
 const router = createHashRouter([
 	{ path: "/", element: <HomePage /> },
 	{ path: "/client", element: <Client /> },
+	...adminRoutes,
 	...blogRoutes,
 ]);
 
